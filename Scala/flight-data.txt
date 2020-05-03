@@ -1,5 +1,7 @@
 
 copy csv file in HDFS at /user/shelly/spark/2015-summary.csv
+
+val flightData2015 =spark.read.option("inferSchema","true").option("header","true").csv("/dev/ecfd/spark_poc/2015-summary.csv")
 **************************************************
 val flightData2015 =spark.read.option("inferSchema","true").option("header","true").csv("/user/shelly/spark/2015-summary.csv")
 flightData2015.take(3)
@@ -21,4 +23,46 @@ dataFrameWay.explain()
 spark.sql("Select max(count) from flight_data_2015").take(1)
 import org.apache.spark.sql.functions.max
 flightData2015.select(max("count")).take(1)
+
+-------------------------
+shuufle
+spark exector heart beat
+driver
+snapshot storage level(memory only,serialize
+paraqet
+kiro
+---
+// sc is an existing SparkContext.
+val sqlContext = new org.apache.spark.sql.hive.HiveContext(sc)
+
+sqlContext.sql("CREATE TABLE IF NOT EXISTS src (key INT, value STRING,value2 STRING)")
+sqlContext.sql("LOAD DATA LOCAL INPATH '/dev/ecfd/spark_poc/2015-summary.csv' INTO TABLE src")
+
+// Queries are expressed in HiveQL
+sqlContext.sql("FROM src SELECT key, value").collect().foreach(println)
+
+----
+# Run on a YARN cluster
+export HADOOP_CONF_DIR=XXX
+./bin/spark-submit \
+  --class org.apache.spark.examples.SparkPi \
+  --master yarn-cluster \  # can also be `yarn-client` for client mode
+  --executor-memory 20G \
+  --num-executors 50 \
+  /path/to/examples.jar \
+  1000
+  ====
+  ./bin/spark-submit \
+  --class <main-class>
+  --master <master-url> \
+  --deploy-mode <deploy-mode> \
+  --conf <key>=<value> \
+  ... # other options
+  <application-jar> \
+  [application-arguments]
+  
+  /usr/bin/spark-submit --class main.scala.com.matthewrathbone.spark.Main --master local ./target/scala-spark-1.0-SNAPSHOT-jar-with-dependencies.jar /path/to/transactions_test.txt /path/to/users_test.txt /path/to/output_folder
+
+
+
 
